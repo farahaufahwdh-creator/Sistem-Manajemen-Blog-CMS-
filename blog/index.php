@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Blog (CMS)</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome untuk Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
@@ -29,7 +26,6 @@
         .table th { border-bottom: 1px solid #dee2e6; padding: 12px; font-size: 13px; color: #495057; }
         .table td { padding: 12px; vertical-align: middle; font-size: 14px; border-bottom: 1px solid #f1f3f5; }
         .img-thumb { width: 45px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid #ddd; }
-        .btn-success { background-color: #28a745; border: none; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -43,7 +39,6 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
         <nav class="col-md-3 col-lg-2 sidebar">
             <div class="nav-label">Menu Navigasi</div>
             <div class="nav flex-column">
@@ -59,14 +54,12 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="col-md-9 col-lg-10 content-area">
             
-            <!-- Section Penulis -->
             <div id="sec-penulis" class="content-section">
                 <div class="section-header">
                     <h2>Data Penulis</h2>
-                    <button class="btn btn-success btn-sm" onclick="modalTambah()">
+                    <button class="btn btn-success btn-sm" onclick="modalTambahPenulis()">
                         <i class="fas fa-plus"></i> Tambah Penulis
                     </button>
                 </div>
@@ -85,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- Section Artikel -->
             <div id="sec-artikel" class="content-section d-none">
                 <div class="section-header">
                     <h2>Data Artikel</h2>
@@ -110,7 +102,6 @@
                 </div>
             </div>
 
-            <!-- Section Kategori -->
             <div id="sec-kategori" class="content-section d-none">
                 <div class="section-header">
                     <h2>Data Kategori</h2>
@@ -135,7 +126,51 @@
     </div>
 </div>
 
-<!-- Modal Artikel -->
+<div class="modal fade" id="modal-penulis" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="f-penulis" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header"><h5 id="judul-modal-penulis">Input Data Penulis</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="p-id">
+                    <div class="row mb-3">
+                        <div class="col-6"><label class="small fw-bold">Nama Depan</label><input type="text" class="form-control" name="nama_depan" id="p-nd" required></div>
+                        <div class="col-6"><label class="small fw-bold">Nama Belakang</label><input type="text" class="form-control" name="nama_belakang" id="p-nb" required></div>
+                    </div>
+                    <div class="mb-3"><label class="small fw-bold">Username</label><input type="text" class="form-control" name="user_name" id="p-un" required></div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Password</label>
+                        <input type="password" class="form-control" name="password" id="p-pass">
+                        <small class="text-muted" id="pass-help">*Kosongkan jika tidak ingin mengubah password</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Foto Profil</label>
+                        <input type="file" class="form-control" name="foto" id="p-foto">
+                        <small class="text-muted">*Kosongkan untuk menggunakan default.png</small>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="submit" class="btn btn-success w-100">Simpan Data</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-kategori" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="f-kategori">
+            <div class="modal-content">
+                <div class="modal-header"><h5 id="judul-modal-kategori">Input Data Kategori</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="k-id">
+                    <div class="mb-3"><label class="small fw-bold">Nama Kategori</label><input type="text" class="form-control" name="nama_kategori" id="k-nama" required></div>
+                    <div class="mb-3"><label class="small fw-bold">Keterangan</label><textarea class="form-control" name="keterangan" id="k-ket" rows="3"></textarea></div>
+                </div>
+                <div class="modal-footer"><button type="submit" class="btn btn-success w-100">Simpan Kategori</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade" id="modal-artikel" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <form id="f-artikel" enctype="multipart/form-data">
@@ -164,57 +199,10 @@
                     <div class="mb-3">
                         <label class="small fw-bold">Gambar Sampul</label>
                         <input type="file" class="form-control" name="gambar" id="art-gambar">
-                        <small class="text-muted">*Kosongkan jika tidak ingin mengubah gambar</small>
+                        <small class="text-muted">*Maksimal 2MB (JPG/PNG)</small>
                     </div>
                 </div>
                 <div class="modal-footer"><button type="submit" class="btn btn-success w-100">Simpan Artikel</button></div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Kategori -->
-<div class="modal fade" id="modal-kategori" tabindex="-1">
-    <div class="modal-dialog">
-        <form id="f-kategori">
-            <div class="modal-content">
-                <div class="modal-header"><h5 id="judul-modal-kategori">Input Data Kategori</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="k-id">
-                    <div class="mb-3"><label class="small fw-bold">Nama Kategori</label><input type="text" class="form-control" name="nama_kategori" id="k-nama" required></div>
-                    <div class="mb-3"><label class="small fw-bold">Keterangan</label><textarea class="form-control" name="keterangan" id="k-ket" rows="3"></textarea></div>
-                </div>
-                <div class="modal-footer"><button type="submit" class="btn btn-success w-100">Simpan Kategori</button></div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Penulis -->
-<div class="modal fade" id="modal-penulis" tabindex="-1">
-    <div class="modal-dialog">
-        <form id="f-penulis" enctype="multipart/form-data">
-            <div class="modal-content">
-                <div class="modal-header"><h5 id="judul-modal-penulis">Input Data Penulis</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="p-id">
-                    <div class="row mb-3">
-                        <div class="col-6"><label class="small fw-bold">Nama Depan</label><input type="text" class="form-control" name="nama_depan" id="p-nd" required></div>
-                        <div class="col-6"><label class="small fw-bold">Nama Belakang</label><input type="text" class="form-control" name="nama_belakang" id="p-nb" required></div>
-                    </div>
-                    <div class="mb-3"><label class="small fw-bold">Username</label><input type="text" class="form-control" name="user_name" id="p-un" required></div>
-                    <div class="mb-3">
-                        <label class="small fw-bold">Password</label>
-                        <input type="password" class="form-control" name="password" id="p-pass" placeholder="Isi untuk ganti password">
-                        <small class="text-muted text-edit-only d-none">*Kosongkan jika tidak ingin mengubah password</small>
-                    </div>
-                    <div class="mb-3">
-                        <label class="small fw-bold">Foto Profil</label>
-                        <input type="file" class="form-control" name="foto" id="p-foto">
-                        <small class="text-muted text-edit-only d-none">*Kosongkan jika tidak ingin mengubah foto</small>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="submit" class="btn btn-success w-100">Simpan Data</button></div>
             </div>
         </form>
     </div>
@@ -237,7 +225,6 @@
         if(target === 'artikel') { fetchArtikel(); loadDropdowns(); }
     }
 
-    // --- DROPBOWN LOADERS ---
     async function loadDropdowns() {
         const resP = await fetch('ambil_penulis.php');
         const dataP = await resP.json();
@@ -252,14 +239,14 @@
         document.getElementById('art-kategori').innerHTML = optK;
     }
 
-    // --- LOGIKA PENULIS ---
+    // --- CRUD PENULIS ---
     async function fetchPenulis() {
         const res = await fetch('ambil_penulis.php');
         const data = await res.json();
         let html = '';
         data.forEach(p => {
             html += `<tr>
-                <td><img src="uploads_penulis/${p.foto}" class="img-thumb" onerror="this.src='https://ui-avatars.com/api/?name=${p.nama_depan}'"></td>
+                <td><img src="uploads_penulis/${p.foto}" class="img-thumb" onerror="this.src='uploads_penulis/default.png'"></td>
                 <td>${p.nama_depan} ${p.nama_belakang}</td>
                 <td><span class="text-success fw-bold">${p.user_name}</span></td>
                 <td>
@@ -271,24 +258,21 @@
         document.getElementById('list-penulis').innerHTML = html || '<tr><td colspan="4" class="text-center">Kosong</td></tr>';
     }
 
-    function modalTambah() { 
-        document.getElementById('f-penulis').reset(); 
-        document.getElementById('p-id').value = ''; 
-        document.getElementById('judul-modal-penulis').innerText = 'Tambah Penulis';
-        document.querySelectorAll('.text-edit-only').forEach(el => el.classList.add('d-none'));
-        modalP.show(); 
+    function modalTambahPenulis() {
+        document.getElementById('f-penulis').reset();
+        document.getElementById('p-id').value = '';
+        document.getElementById('pass-help').classList.add('d-none');
+        modalP.show();
     }
 
     async function editPenulis(id) {
         const data = await (await fetch(`ambil_satu_penulis.php?id=${id}`)).json();
-        if (data.id) {
+        if(data.id) {
             document.getElementById('p-id').value = data.id;
             document.getElementById('p-nd').value = data.nama_depan;
             document.getElementById('p-nb').value = data.nama_belakang;
             document.getElementById('p-un').value = data.user_name;
-            document.getElementById('p-pass').value = ''; // Password dikosongkan demi keamanan
-            document.getElementById('judul-modal-penulis').innerText = 'Edit Penulis';
-            document.querySelectorAll('.text-edit-only').forEach(el => el.classList.remove('d-none'));
+            document.getElementById('pass-help').classList.remove('d-none');
             modalP.show();
         }
     }
@@ -299,24 +283,43 @@
         const url = id ? 'update_penulis.php' : 'simpan_penulis.php';
         const res = await fetch(url, { method: 'POST', body: new FormData(this) });
         const result = await res.json();
-        if(result.status === 'ok' || result.status === 'updated') { 
-            Swal.fire('Berhasil!', 'Data penulis diperbarui.', 'success'); 
-            modalP.hide(); 
-            fetchPenulis(); 
+        if(result.status === 'ok' || result.status === 'updated') {
+            Swal.fire('Berhasil!', 'Data penulis diproses.', 'success');
+            modalP.hide(); fetchPenulis();
         } else {
-            Swal.fire('Gagal!', result.message || 'Terjadi kesalahan', 'error');
+            Swal.fire('Gagal!', result.message, 'error');
         }
     };
 
     async function hapusPenulis(id) {
-        if ((await Swal.fire({ title: 'Hapus Penulis?', icon: 'warning', showCancelButton: true })).isConfirmed) {
-            const fd = new FormData(); fd.append('id', id);
-            const res = await fetch('hapus_penulis.php', { method: 'POST', body: fd });
-            if ((await res.json()).status === 'success') { fetchPenulis(); Swal.fire('Dihapus!', '', 'success'); }
+    const confirm = await Swal.fire({ 
+        title: 'Hapus Penulis?', 
+        text: "Data yang dihapus tidak bisa dikembalikan!",
+        icon: 'warning', 
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6e7881',
+        confirmButtonText: 'Ya, Hapus!'
+    });
+
+    if (confirm.isConfirmed) {
+        const fd = new FormData(); 
+        fd.append('id', id);
+        
+        const res = await fetch('hapus_penulis.php', { method: 'POST', body: fd });
+        const result = await res.json();
+
+        if (result.status === 'success') { 
+            fetchPenulis(); 
+            Swal.fire('Terhapus!', 'Data penulis telah dihapus.', 'success'); 
+        } else {
+            // Ini akan memunculkan pesan "Penulis tidak bisa dihapus..." dari PHP
+            Swal.fire('Gagal!', result.message, 'error');
         }
     }
+}
 
-    // --- LOGIKA KATEGORI ---
+    // --- CRUD KATEGORI ---
     async function fetchKategori() {
         const res = await fetch('ambil_kategori.php');
         const data = await res.json();
@@ -334,15 +337,14 @@
         document.getElementById('list-kategori').innerHTML = html || '<tr><td colspan="3" class="text-center">Kosong</td></tr>';
     }
 
-    function modalTambahKategori() { document.getElementById('f-kategori').reset(); document.getElementById('k-id').value = ''; document.getElementById('judul-modal-kategori').innerText = 'Tambah Kategori'; modalK.show(); }
+    function modalTambahKategori() { document.getElementById('f-kategori').reset(); document.getElementById('k-id').value = ''; modalK.show(); }
 
     async function editKategori(id) {
         const data = await (await fetch(`ambil_satu_kategori.php?id=${id}`)).json();
-        if (data.id) {
+        if(data.id) {
             document.getElementById('k-id').value = data.id;
             document.getElementById('k-nama').value = data.nama_kategori;
             document.getElementById('k-ket').value = data.keterangan;
-            document.getElementById('judul-modal-kategori').innerText = 'Edit Kategori';
             modalK.show();
         }
     }
@@ -353,30 +355,23 @@
         const url = id ? 'update_kategori.php' : 'simpan_kategori.php';
         const res = await fetch(url, { method: 'POST', body: new FormData(this) });
         const result = await res.json();
-        if(result.status === 'ok' || result.status === 'updated') { 
-            Swal.fire('Berhasil!', 'Data kategori diperbarui.', 'success'); modalK.hide(); fetchKategori(); 
+        if(result.status === 'ok' || result.status === 'updated') {
+            Swal.fire('Berhasil!', 'Data kategori disimpan.', 'success');
+            modalK.hide(); fetchKategori();
         }
     };
 
     async function hapusKategori(id) {
-    if ((await Swal.fire({ title: 'Hapus Kategori?', icon: 'warning', showCancelButton: true })).isConfirmed) {
-        const fd = new FormData(); 
-        fd.append('id', id);
-        
-        const res = await fetch('hapus_kategori.php', { method: 'POST', body: fd });
-        const result = await res.json(); // PHP sekarang mengirim JSON
-
-        if (result.status === 'deleted') { 
-            fetchKategori(); 
-            Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success'); 
-        } else {
-            // Ini yang akan memunculkan pesan "Gagal karena ada artikel"
-            Swal.fire('Gagal!', result.message, 'error');
+        if ((await Swal.fire({ title: 'Hapus Kategori?', icon: 'warning', showCancelButton: true })).isConfirmed) {
+            const fd = new FormData(); fd.append('id', id);
+            const res = await fetch('hapus_kategori.php', { method: 'POST', body: fd });
+            const result = await res.json();
+            if(result.status === 'deleted') { fetchKategori(); Swal.fire('Dihapus!', '', 'success'); }
+            else { Swal.fire('Gagal!', result.message, 'error'); }
         }
     }
-}
 
-    // --- LOGIKA ARTIKEL ---
+    // --- CRUD ARTIKEL ---
     async function fetchArtikel() {
         const res = await fetch('ambil_artikel.php');
         const data = await res.json();
@@ -394,25 +389,19 @@
                 </td>
             </tr>`;
         });
-        document.getElementById('list-artikel').innerHTML = html || '<tr><td colspan="6" class="text-center">Belum ada artikel.</td></tr>';
+        document.getElementById('list-artikel').innerHTML = html || '<tr><td colspan="6" class="text-center">Kosong</td></tr>';
     }
 
-    function modalTambahArtikel() { 
-        document.getElementById('f-artikel').reset(); 
-        document.getElementById('art-id').value = ''; 
-        document.getElementById('judul-modal-artikel').innerText = 'Tambah Artikel';
-        modalA.show(); 
-    }
+    function modalTambahArtikel() { document.getElementById('f-artikel').reset(); document.getElementById('art-id').value = ''; modalA.show(); }
 
     async function editArtikel(id) {
         const data = await (await fetch(`ambil_satu_artikel.php?id=${id}`)).json();
-        if (data.id) {
+        if(data.id) {
             document.getElementById('art-id').value = data.id;
             document.getElementById('art-judul').value = data.judul;
             document.getElementById('art-penulis').value = data.id_penulis;
             document.getElementById('art-kategori').value = data.id_kategori;
             document.getElementById('art-isi').value = data.isi;
-            document.getElementById('judul-modal-artikel').innerText = 'Edit Artikel';
             modalA.show();
         }
     }
@@ -423,18 +412,20 @@
         const url = id ? 'update_artikel.php' : 'simpan_artikel.php';
         const res = await fetch(url, { method: 'POST', body: new FormData(this) });
         const result = await res.json();
-        if(result.status === 'success') { 
-            Swal.fire('Berhasil!', 'Artikel disimpan.', 'success'); modalA.hide(); fetchArtikel(); 
+        if(result.status === 'success' || result.status === 'updated') {
+            Swal.fire('Berhasil!', 'Artikel disimpan.', 'success');
+            modalA.hide(); fetchArtikel();
         } else {
             Swal.fire('Gagal!', result.msg || 'Terjadi kesalahan', 'error');
         }
     };
 
     async function hapusArtikel(id) {
-        if ((await Swal.fire({ title: 'Hapus Artikel?', text: 'Gambar juga akan dihapus dari server!', icon: 'warning', showCancelButton: true })).isConfirmed) {
+        if ((await Swal.fire({ title: 'Hapus Artikel?', icon: 'warning', showCancelButton: true })).isConfirmed) {
             const fd = new FormData(); fd.append('id', id);
             const res = await fetch('hapus_artikel.php', { method: 'POST', body: fd });
-            if ((await res.json()).status === 'success') { fetchArtikel(); Swal.fire('Dihapus!', '', 'success'); }
+            const result = await res.json();
+            if(result.status === 'success') { fetchArtikel(); Swal.fire('Dihapus!', '', 'success'); }
         }
     }
 
