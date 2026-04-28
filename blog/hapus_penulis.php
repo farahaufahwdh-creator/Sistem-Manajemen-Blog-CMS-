@@ -1,37 +1,42 @@
 <?php
-header('Content-Type: application/json'); // Tambahkan agar konsisten
-require 'koneksi.php';
+include "koneksi.php";
+header('Content-Type: application/json');
 
-// Menangkap ID dari POST
-$id = $_POST['id'] ?? 0;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id = $_POST['id'];
 
-if ($id > 0) {
-    // 1. Ambil info foto untuk dihapus dari folder
-    // Menggunakan query langsung karena ID sudah dipastikan angka (int)
-    $res = $koneksi->query("SELECT foto FROM penulis WHERE id=$id");
-    $data_lama = $res->fetch_assoc();
+    // 1. Cek apakah penulis ini masih memiliki artikel
+    $check = $koneksi->prepare("SELECT id FROM artikel WHERE id_penulis = ? LIMIT 1");
+    $check->bind_param("i", $id);
+    $check->execute();
+    $resultCheck = $check->get_result();
 
-    // 2. Proses hapus data di database menggunakan Prepared Statement
+    if ($resultCheck->num_rows > 0) {
+        // Jika ada artikel, kirim pesan error
+        echo json_encode([
+            'status' => 'error', 
+            'message' => 'Penulis tidak bisa dihapus karena masih memiliki artikel aktif!'
+        ]);
+        exit;
+    }
+
+    // 2. Jika tidak ada artikel, ambil nama foto untuk dihapus dari folder (opsional tapi bagus)
+    $queryFoto = $koneksi->prepare("SELECT foto FROM penulis WHERE id = ?");
+    $queryFoto->bind_param("i", $id);
+    $queryFoto->execute();
+    $resFoto = $queryFoto->get_result()->fetch_assoc();
+
+    // 3. Proses hapus dari database
     $stmt = $koneksi->prepare("DELETE FROM penulis WHERE id = ?");
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        // 3. Hapus file fisik foto jika ada dan bukan default
-        if ($data_lama && !empty($data_lama['foto']) && $data_lama['foto'] != 'default.png') {
-            $path = 'uploads_penulis/' . $data_lama['foto'];
-            if (file_exists($path)) {
-                unlink($path);
-            }
+        // Hapus file fisik jika bukan default.png
+        if ($resFoto['foto'] != 'default.png' && file_exists("uploads_penulis/" . $resFoto['foto'])) {
+            unlink("uploads_penulis/" . $resFoto['foto']);
         }
-        // Respon 'success' sudah sesuai dengan pengecekan di index.php
         echo json_encode(['status' => 'success']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus dari database.']);
+        echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data dari database.']);
     }
-    $stmt->close();
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'ID tidak valid.']);
 }
-
-$koneksi->close();
-?>
